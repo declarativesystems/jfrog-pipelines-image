@@ -1,4 +1,5 @@
-IMAGE_TAG := 0.0.1-1
+# FIXME - point of truth for pipelines how?
+IMAGE_TAG := latest
 IMAGE_NAME := declarativesystems.jfrog.io/docker/docker-local/pipelines
 IMAGE_VERSION := $(IMAGE_NAME):$(IMAGE_TAG)
 

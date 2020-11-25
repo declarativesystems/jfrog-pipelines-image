@@ -15,8 +15,8 @@ pipelines:
           affinityGroup: jfrogPipelinesImage
           dockerFileLocation: .
           dockerFileName: Dockerfile
-          dockerImageName: $(make print_image_name)
-          dockerImageTag:  $(make print_image_tag)
+          dockerImageName: declarativesystems.jfrog.io/docker/docker-local/pipelines
+          dockerImageTag: ${run_number}
           inputResources:
             - name: gitJfrogPipelinesImage
           integrations:
