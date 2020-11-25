@@ -47,13 +47,13 @@ RUN wget -nv https://api.bintray.com/content/jfrog/jfrog-cli-go/${JFROG_CLI_VERS
 
 # NodeJS
 RUN curl -O https://nodejs.org/dist/${NODE_JS_VERSION}/node-${NODE_JS_VERSION}-linux-x64.tar.xz \
-    && tar -Jxvf node-${NODE_JS_VERSION}-linux-x64.tar.xz \
+    && tar -Jxf node-${NODE_JS_VERSION}-linux-x64.tar.xz \
     && mv node-${NODE_JS_VERSION}-linux-x64 /usr/local \
     && ln -s /usr/local/node-${NODE_JS_VERSION}-linux-x64 /usr/local/node
 
 # Golang
 RUN curl -LO https://golang.org/dl/go${GOLANG_VERSION}.linux-amd64.tar.gz \
-    && tar -zxvf go${GOLANG_VERSION}.linux-amd64.tar.gz \
+    && tar -zxf go${GOLANG_VERSION}.linux-amd64.tar.gz \
     && mv go go${GOLANG_VERSION} \
     && mv go${GOLANG_VERSION} /usr/local \
     && ln -s /usr/local/go${GOLANG_VERSION} /usr/local/go
