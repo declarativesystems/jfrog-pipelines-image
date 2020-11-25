@@ -24,7 +24,8 @@ RUN apt update && apt install -y \
     git \
     bash \
     podman \
-    pip
+    pip \
+    python-is-python3
 
 # Python (system for now - 3.8)
 RUN pip install pipenv wheel
