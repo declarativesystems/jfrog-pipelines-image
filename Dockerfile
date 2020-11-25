@@ -23,8 +23,11 @@ RUN apt update && apt install -y \
     jq \
     git \
     bash \
-    podman
+    podman \
+    pip
 
+# Python (system for now - 3.8)
+RUN pip install pipenv wheel
 
 # GCP - not supported
 # Azure - not supported
