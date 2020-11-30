@@ -6,6 +6,7 @@ ARG JFROG_CLI_VERSION="1.41.1"
 ARG NODE_JS_VERSION="v15.0.1"
 ARG GOLANG_VERSION="1.15.3"
 ARG GORELEASER_VERSION="v0.145.0"
+ARG AWS_KUBECTL_VERSION="1.18.9/2020-11-02"S
 
 RUN apt update && apt install -y \
     sudo \
@@ -68,6 +69,12 @@ RUN curl -LO https://golang.org/dl/go${GOLANG_VERSION}.linux-amd64.tar.gz \
 # goreleaser
 RUN curl -LO https://github.com/goreleaser/goreleaser/releases/download/${GORELEASER_VERSION}/goreleaser_amd64.deb \
     && dpkg -i goreleaser_amd64.deb
+
+# kubectl - AWS
+RUN curl -o /usr/local/bin/kubectl_aws \
+    https://amazon-eks.s3.us-west-2.amazonaws.com/${AWS_KUBECTL_VERSION}/bin/linux/amd64/kubectl \
+    && chmod +x /usr/local/bin/kubectl_aws
+
 
 RUN apt clean
 ENV PATH=/usr/local/node/bin:/usr/local/go/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
