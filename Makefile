@@ -1,4 +1,4 @@
-IMAGE_TAG := 0.0.2
+IMAGE_TAG := 0.1.0
 IMAGE_NAME := declarativesystems.jfrog.io/docker/docker-local/pipelines
 IMAGE_VERSION := $(IMAGE_NAME):$(IMAGE_TAG)
 
