@@ -71,9 +71,9 @@ RUN curl -LO https://github.com/goreleaser/goreleaser/releases/download/${GORELE
     && dpkg -i goreleaser_amd64.deb
 
 # kubectl - AWS
-RUN curl -o /usr/local/bin/kubectl_aws \
+RUN curl -o /usr/local/bin/kubectl \
     https://amazon-eks.s3.us-west-2.amazonaws.com/${AWS_KUBECTL_VERSION}/bin/linux/amd64/kubectl \
-    && chmod +x /usr/local/bin/kubectl_aws
+    && chmod +x /usr/local/bin/kubectl
 
 
 RUN apt clean
