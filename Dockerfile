@@ -66,7 +66,7 @@ RUN curl -LO https://golang.org/dl/go${GOLANG_VERSION}.linux-amd64.tar.gz \
     && ln -s /usr/local/go${GOLANG_VERSION} /usr/local/go
 
 # podman - force vfs driver to allow running in pipelines containerised build
-RUN cp /usr/share/containers/storage.conf /etc/containers/
+RUN cp /usr/share/containers/storage.conf /etc/containers/ \
     && sed -i 's/driver = ""/driver = "vfs"/' /etc/containers/storage.conf
 
 # goreleaser
