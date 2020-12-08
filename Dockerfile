@@ -24,9 +24,11 @@ RUN apt update && apt install -y \
     jq \
     git \
     bash \
-    podman \
     pip \
-    python-is-python3
+    python-is-python3 \
+    podman \
+    runc \
+    containers-storage
 
 # Python (system for now - 3.8)
 RUN pip install pipenv wheel
@@ -64,7 +66,8 @@ RUN curl -LO https://golang.org/dl/go${GOLANG_VERSION}.linux-amd64.tar.gz \
     && ln -s /usr/local/go${GOLANG_VERSION} /usr/local/go
 
 # podman - force vfs driver to allow running in pipelines containerised build
-#RUN sed -i 's/driver = ""/driver = "vfs"/' /etc/containers/storage.conf
+RUN cp /usr/share/containers/storage.conf /etc/containers/
+    && sed -i 's/driver = ""/driver = "vfs"/' /etc/containers/storage.conf
 
 # goreleaser
 RUN curl -LO https://github.com/goreleaser/goreleaser/releases/download/${GORELEASER_VERSION}/goreleaser_amd64.deb \
