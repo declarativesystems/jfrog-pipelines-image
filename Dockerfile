@@ -25,10 +25,7 @@ RUN apt update && apt install -y \
     git \
     bash \
     pip \
-    python-is-python3 \
-    podman \
-    runc \
-    containers-storage
+    python-is-python3
 
 # Python (system for now - 3.8)
 RUN pip install pipenv wheel
@@ -65,9 +62,16 @@ RUN curl -LO https://golang.org/dl/go${GOLANG_VERSION}.linux-amd64.tar.gz \
     && mv go${GOLANG_VERSION} /usr/local \
     && ln -s /usr/local/go${GOLANG_VERSION} /usr/local/go
 
-# podman - force vfs driver to allow running in pipelines containerised build
-RUN cp /usr/share/containers/storage.conf /etc/containers/ \
-    && sed -i 's/driver = ""/driver = "vfs"/' /etc/containers/storage.conf
+# podman is in ubuntu 20.10 but has a bug where dockerfile in subdir of context
+# is not allowed, so use the suse packages instead. force the 20.04 files since
+# there is no 20.10 build
+RUN echo "deb https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/xUbuntu_20.04/ /" | sudo tee /etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list \
+    && curl -L https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/xUbuntu_20.04/Release.key | sudo apt-key add - \
+    && sudo apt-get update \
+    && sudo apt-get -y install podman
+
+#- force vfs driver to allow running in pipelines containerised build
+RUN sed -i 's/driver = ""/driver = "vfs"/' /etc/containers/storage.conf
 
 # goreleaser
 RUN curl -LO https://github.com/goreleaser/goreleaser/releases/download/${GORELEASER_VERSION}/goreleaser_amd64.deb \
