@@ -7,8 +7,6 @@ ARG NODE_JS_VERSION="v15.3.0"
 ARG GOLANG_VERSION="1.15.5"
 ARG GORELEASER_VERSION="v0.148.0"
 ARG AWS_KUBECTL_VERSION="1.18.9/2020-11-02"
-ARG PODMAN_VERSION="2.2.0~2"
-ARG BUILDAH_VERSION="1.18.0~1"
 
 RUN apt update && apt install -y \
     sudo \
@@ -69,10 +67,10 @@ RUN curl -LO https://golang.org/dl/go${GOLANG_VERSION}.linux-amd64.tar.gz \
 RUN echo "deb https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/xUbuntu_20.04/ /" | sudo tee /etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list \
     && curl -L https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/xUbuntu_20.04/Release.key | sudo apt-key add - \
     && apt update \
-    && apt -y install podman=$PODMAN_VERSION
+    && apt -y install podman
 
 # buildah
-RUN apt install -y buildah=$BUILDAH_VERSION
+RUN apt install -y buildah
 
 #- force vfs driver to allow running in pipelines containerised build
 RUN sed -i 's/driver = ""/driver = "vfs"/' /etc/containers/storage.conf
