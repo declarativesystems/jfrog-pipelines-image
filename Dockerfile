@@ -25,7 +25,9 @@ RUN apt update && apt install -y \
     git \
     bash \
     pip \
-    python-is-python3
+    python-is-python3\
+    gawk \
+    vim
 
 # Python (system for now - 3.8)
 RUN pip install pipenv wheel
@@ -72,13 +74,12 @@ RUN echo "deb https://download.opensuse.org/repositories/devel:/kubic:/libcontai
 # buildah
 RUN apt install -y buildah
 
-#- force vfs driver to allow running in pipelines containerised build
+# force vfs driver to allow running in pipelines containerised build
 RUN sed -i 's/driver = ""/driver = "vfs"/' /etc/containers/storage.conf
 
-# change container storage paths to avoid files nuked between steps
-RUN sed -i 's/runroot = "\/var\/run\/containers\/storage"/runroot = "\/root\/containers\/storage"/' /etc/containers/storage.conf
-RUN sed -i 's/graphroot = "\/var\/lib\/containers\/storage"/graphroot = "\/root\/containers\/storage"/' /etc/containers/storage.conf
-
+# run setup script in your builds to store images outside the container (vital)
+COPY container_storage_setup /usr/local/bin
+RUN chmod +x /usr/local/bin/container_storage_setup
 
 # goreleaser
 RUN curl -LO https://github.com/goreleaser/goreleaser/releases/download/${GORELEASER_VERSION}/goreleaser_amd64.deb \
@@ -90,7 +91,7 @@ RUN curl -o /usr/local/bin/kubectl \
     && chmod +x /usr/local/bin/kubectl
 
 
-RUN apt clean
+RUN apt clean && rm -rf /var/lib/apt/lists/*
 ENV PATH=/usr/local/node/bin:/usr/local/go/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
 CMD ["/bin/bash"]

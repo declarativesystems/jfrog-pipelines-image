@@ -1,0 +1,19 @@
+#!/bin/bash
+
+STORAGE_BASE_DIR=$1
+if [ -z "$STORAGE_BASE_DIR" ] ; then
+  echo "usage: $0 STORAGE_BASE_DIR"
+  exit 1
+elif [ ! -d "$STORAGE_BASE_DIR" ] ; then
+  echo "directory does not exist: ${STORAGE_BASE_DIR}"
+  exit 1
+fi
+
+# change container storage paths to avoid files nuked between steps
+STORAGE_CONF="/etc/containers/storage.conf"
+awk -i inplace \
+  '/runroot = / {print "runroot = \"'"${STORAGE_BASE_DIR}"'\"" ; next} {print}' \
+  "$STORAGE_CONF"
+awk -i inplace \
+  '/graphroot = / {print "graphroot = \"'"${STORAGE_BASE_DIR}"'\"" ; next} {print}' \
+  "$STORAGE_CONF"
