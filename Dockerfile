@@ -77,6 +77,11 @@ RUN apt install -y buildah=$BUILDAH_VERSION
 #- force vfs driver to allow running in pipelines containerised build
 RUN sed -i 's/driver = ""/driver = "vfs"/' /etc/containers/storage.conf
 
+# change container storage paths to avoid files nuked between steps
+RUN sed -i 's/runroot = "/var/run/containers/storage"/runroot = "/root/containers/storage"/' /etc/containers/storage.conf
+RUN sed -i 's/graphroot = "/var/lib/containers/storage"/graphroot = "/root/containers/storage"/' /etc/containers/storage.conf
+
+
 # goreleaser
 RUN curl -LO https://github.com/goreleaser/goreleaser/releases/download/${GORELEASER_VERSION}/goreleaser_amd64.deb \
     && dpkg -i goreleaser_amd64.deb
