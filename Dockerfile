@@ -1,12 +1,32 @@
 # Ubuntu 20.10
-FROM ubuntu:groovy-20201022.1
+FROM ubuntu:groovy-20201125.2
 ARG DEBIAN_FRONTEND=noninteractive
-ARG AWS_CLI_VERSION="2.1.4"
-ARG JFROG_CLI_VERSION="1.41.2"
-ARG NODE_JS_VERSION="v15.3.0"
-ARG GOLANG_VERSION="1.15.5"
-ARG GORELEASER_VERSION="v0.148.0"
+
+# https://github.com/aws/aws-cli/blob/v2/CHANGELOG.rst
+ARG AWS_CLI_VERSION="2.1.18"
+
+# https://github.com/jfrog/jfrog-cli/blob/master/RELEASE.md
+ARG JFROG_CLI_VERSION="1.43.2"
+
+# https://nodejs.org/en/
+ARG NODE_JS_VERSION="v15.5.1"
+
+# https://golang.org/dl/
+ARG GOLANG_VERSION="1.15.6"
+
+# https://github.com/goreleaser/goreleaser/
+ARG GORELEASER_VERSION="v0.154.0"
+
+# https://docs.aws.amazon.com/eks/latest/userguide/install-kubectl.html
 ARG AWS_KUBECTL_VERSION="1.18.9/2020-11-02"
+
+# https://www.npmjs.com/package/ajv-cli
+ARG AVG_CLI_VERSION="4.0.1"
+
+# https://www.npmjs.com/package/js-beautify
+ARG JS_BEAUTIFY_VERSION="1.13.4"
+
+ENV PATH=/usr/local/node/bin:/usr/local/go/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
 RUN apt update && apt install -y \
     sudo \
@@ -90,8 +110,12 @@ RUN curl -o /usr/local/bin/kubectl \
     https://amazon-eks.s3.us-west-2.amazonaws.com/${AWS_KUBECTL_VERSION}/bin/linux/amd64/kubectl \
     && chmod +x /usr/local/bin/kubectl
 
+# JSON schema validator
+RUN npm install -g ajv-cli@${AVG_CLI_VERSION}
+
+# js-beautify
+RUN npm install -g js-beautify@${JS_BEAUTIFY_VERSION}
 
 RUN apt clean && rm -rf /var/lib/apt/lists/*
-ENV PATH=/usr/local/node/bin:/usr/local/go/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
 CMD ["/bin/bash"]
