@@ -26,6 +26,9 @@ ARG AVG_CLI_VERSION="4.0.1"
 # https://www.npmjs.com/package/js-beautify
 ARG JS_BEAUTIFY_VERSION="1.13.4"
 
+# https://www.npmjs.com/package/yarn
+ARG YARN_VERSION="1.22.10"
+
 ENV PATH=/usr/local/node/bin:/usr/local/go/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
 RUN apt update && apt install -y \
@@ -115,6 +118,9 @@ RUN npm install -g ajv-cli@${AVG_CLI_VERSION}
 
 # js-beautify
 RUN npm install -g js-beautify@${JS_BEAUTIFY_VERSION}
+
+# yarn
+RUN npm install -g yarn@${YARN_VERSION}
 
 RUN apt clean && rm -rf /var/lib/apt/lists/*
 
