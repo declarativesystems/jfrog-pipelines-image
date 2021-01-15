@@ -98,7 +98,7 @@ RUN echo "deb https://download.opensuse.org/repositories/devel:/kubic:/libcontai
 RUN apt install -y buildah
 
 # force vfs driver to allow running in pipelines containerised build
-RUN sed -i 's/driver = ""/driver = "vfs"/' /etc/containers/storage.conf
+RUN sed -i 's/driver = "[^"]*"/driver = "vfs"/' /etc/containers/storage.conf
 
 # run setup script in your builds to store images outside the container (vital)
 COPY container_storage_setup /usr/local/bin
