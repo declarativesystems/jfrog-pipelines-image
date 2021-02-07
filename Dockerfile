@@ -3,19 +3,19 @@ FROM ubuntu:groovy-20201125.2
 ARG DEBIAN_FRONTEND=noninteractive
 
 # https://github.com/aws/aws-cli/blob/v2/CHANGELOG.rst
-ARG AWS_CLI_VERSION="2.1.18"
+ARG AWS_CLI_VERSION="2.1.24"
 
 # https://github.com/jfrog/jfrog-cli/blob/master/RELEASE.md
-ARG JFROG_CLI_VERSION="1.43.2"
+ARG JFROG_CLI_VERSION="1.44.0"
 
 # https://nodejs.org/en/
-ARG NODE_JS_VERSION="v15.5.1"
+ARG NODE_JS_VERSION="v15.8.0"
 
 # https://golang.org/dl/
-ARG GOLANG_VERSION="1.15.6"
+ARG GOLANG_VERSION="1.15.8"
 
 # https://github.com/goreleaser/goreleaser/
-ARG GORELEASER_VERSION="v0.154.0"
+ARG GORELEASER_VERSION="v0.155.0"
 
 # https://docs.aws.amazon.com/eks/latest/userguide/install-kubectl.html
 ARG AWS_KUBECTL_VERSION="1.18.9/2020-11-02"
@@ -24,12 +24,14 @@ ARG AWS_KUBECTL_VERSION="1.18.9/2020-11-02"
 ARG AVG_CLI_VERSION="4.0.1"
 
 # https://www.npmjs.com/package/js-beautify
-ARG JS_BEAUTIFY_VERSION="1.13.4"
+ARG JS_BEAUTIFY_VERSION="1.13.5"
 
 # https://www.npmjs.com/package/yarn
 ARG YARN_VERSION="1.22.10"
 
-ENV PATH=/usr/local/node/bin:/usr/local/go/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+# /usr/lib/cri-o-runc/sbin runc must be in PATH or there will be mid-build
+# errors from buildah
+ENV PATH=/usr/local/node/bin:/usr/local/go/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/lib/cri-o-runc/sbin
 
 RUN apt update && apt install -y \
     sudo \
