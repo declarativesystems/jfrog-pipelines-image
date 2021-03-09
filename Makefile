@@ -17,6 +17,7 @@ image_tag := $(image_name):$(final_version)
 
 image:
 	buildah bud \
+		--format docker \
 		-f Dockerfile \
 		--squash \
 		-t $(image_tag)
