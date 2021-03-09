@@ -55,7 +55,7 @@ RUN apt update && apt install -y \
     vim
 
 # Python (system for now - 3.8)
-RUN pip install pipenv wheel
+RUN pip install pipenv wheel poetry
 
 # GCP - not supported
 # Azure - not supported
