@@ -16,7 +16,7 @@ pipelines:
           dockerFileLocation: .
           dockerFileName: Dockerfile
           dockerImageName: ${dockerImageName}
-          dockerImageTag: ${dockerImageVersion}-${run_number}
+          dockerImageTag: ${dockerImageVersion}
           inputResources:
             - name: gitJfrogPipelinesImage
           integrations:
