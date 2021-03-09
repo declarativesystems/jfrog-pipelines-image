@@ -5,35 +5,34 @@ resources:
     configuration:
       gitProvider: githubAccountGeoffwilliams
       path: declarativesystems/jfrog-pipelines-image
+  - name: containerEnvJfrogPipelinesImage
+    type: declarativesystems/ContainerEnv
+    configuration:
+      sourceArtifactory: artifactory
 
 pipelines:
   - name: jfrogPipelinesImage
+    configuration:
+      runtime:
+        type: image
+        image:
+          custom:
+            name: "declarativesystems.jfrog.io/docker-local/pipelines"
+            tag: "0.7.0-27"
+            registry: artifactory
+            sourceRepository: docker-local
+
     steps:
-      - name: dockerBuild
-        type: DockerBuild
+      - name: buildAndPushImages
+        type: Bash
         configuration:
-          affinityGroup: jfrogPipelinesImage
-          dockerFileLocation: .
-          dockerFileName: Dockerfile
-          dockerImageName: ${dockerImageName}
-          dockerImageTag: ${dockerImageVersion}
           inputResources:
             - name: gitJfrogPipelinesImage
+            - name: containerEnvJfrogPipelinesImage
           integrations:
             - name: artifactory
         execution:
-          onStart:
-            - cd $res_gitJfrogPipelinesImage_resourcePath
-            - add_pipeline_variables dockerImageVersion=$(make print_image_tag)
-            - add_pipeline_variables dockerImageName=$(make print_image_name)
-          onFailure:
-            - tree -L 4
-      - name: dockerPush
-        type: DockerPush
-        configuration:
-          affinityGroup: jfrogPipelinesImage
-          targetRepository: docker-local
-          integrations:
-            - name: artifactory
-          inputSteps:
-            - name: dockerBuild
+          onExecute:
+            - cd ${res_gitJfrogPipelinesImage_resourcePath}
+            - make image
+            - make push
