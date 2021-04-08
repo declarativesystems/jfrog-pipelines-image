@@ -5,6 +5,11 @@ resources:
     configuration:
       gitProvider: githubAccountGeoffwilliams
       path: declarativesystems/jfrog-pipelines-image
+      branches:
+        include: ^{{gitBranch}}$
+      cancelPendingRunsOn:
+        pullRequestUpdate: true
+        newCommit: true
   - name: containerEnvJfrogPipelinesImage
     type: declarativesystems/ContainerEnv
     configuration:
@@ -13,12 +18,15 @@ resources:
 pipelines:
   - name: jfrogPipelinesImage
     configuration:
+      retentionPolicy:
+        maxAgeDays: 90
+        minRuns: 10
       runtime:
         type: image
         image:
           custom:
             name: "declarativesystems.jfrog.io/docker-local/pipelines"
-            tag: "0.7.0-27"
+            tag: "0.8.1"
             registry: artifactory
             sourceRepository: docker-local
 
@@ -34,5 +42,5 @@ pipelines:
         execution:
           onExecute:
             - cd ${res_gitJfrogPipelinesImage_resourcePath}
-            - make image
-            - make push
+            - make image_build
+            - make image_push

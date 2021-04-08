@@ -3,22 +3,22 @@ FROM ubuntu:groovy-20201125.2
 ARG DEBIAN_FRONTEND=noninteractive
 
 # https://github.com/aws/aws-cli/blob/v2/CHANGELOG.rst
-ARG AWS_CLI_VERSION="2.1.24"
+ARG AWS_CLI_VERSION="2.1.35"
 
 # https://github.com/jfrog/jfrog-cli/blob/master/RELEASE.md
-ARG JFROG_CLI_VERSION="1.44.0"
+ARG JFROG_CLI_VERSION="1.46.1"
 
 # https://nodejs.org/en/
-ARG NODE_JS_VERSION="v15.8.0"
+ARG NODE_JS_VERSION="v15.14.0"
 
 # https://golang.org/dl/
-ARG GOLANG_VERSION="1.15.8"
+ARG GOLANG_VERSION="1.16.3"
 
-# https://github.com/goreleaser/goreleaser/
-ARG GORELEASER_VERSION="v0.155.0"
+# https://github.com/goreleaser/goreleaser/releases
+ARG GORELEASER_VERSION="v0.162.0"
 
 # https://docs.aws.amazon.com/eks/latest/userguide/install-kubectl.html
-ARG AWS_KUBECTL_VERSION="1.18.9/2020-11-02"
+ARG AWS_KUBECTL_VERSION="1.19.6/2021-01-05"
 
 # https://www.npmjs.com/package/ajv-cli
 ARG AVG_CLI_VERSION="4.0.1"
@@ -29,9 +29,17 @@ ARG JS_BEAUTIFY_VERSION="1.13.5"
 # https://www.npmjs.com/package/yarn
 ARG YARN_VERSION="1.22.10"
 
+# https://github.com/weaveworks/eksctl/releases
+ARG EKSCTL_VERSION="0.44.0"
+
+# https://github.com/helm/helm/releases
+ARG HELM_VERSION="v3.5.3"
+
 # /usr/lib/cri-o-runc/sbin runc must be in PATH or there will be mid-build
 # errors from buildah
 ENV PATH=/usr/local/node/bin:/usr/local/go/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/lib/cri-o-runc/sbin
+
+WORKDIR /tmp/downloads
 
 RUN apt update && apt install -y \
     sudo \
@@ -59,7 +67,6 @@ RUN pip install pipenv wheel poetry
 
 # GCP - not supported
 # Azure - not supported
-# helm - todo
 # terraform - not supported
 # packer - not supported
 # ansible - not supported
@@ -71,7 +78,7 @@ RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64-${AWS_CLI_VERSION
     && ./aws/install
 
 # JFrog CLI
-RUN wget -nv https://api.bintray.com/content/jfrog/jfrog-cli-go/${JFROG_CLI_VERSION}/jfrog-cli-linux-amd64/jfrog?bt_package=jfrog-cli-linux-amd64 -O jfrog \
+RUN curl -LO https://releases.jfrog.io/artifactory/jfrog-cli/v1/${JFROG_CLI_VERSION}/jfrog-cli-linux-amd64/jfrog \
     && chmod +x jfrog \
     && mv jfrog /usr/bin/jfrog
 
@@ -124,6 +131,16 @@ RUN npm install -g js-beautify@${JS_BEAUTIFY_VERSION}
 # yarn
 RUN npm install -g yarn@${YARN_VERSION}
 
-RUN apt clean && rm -rf /var/lib/apt/lists/*
+# eksctl
+RUN curl -LO https://github.com/weaveworks/eksctl/releases/download/${EKSCTL_VERSION}/eksctl_Linux_amd64.tar.gz \
+    && tar -zxvf eksctl_Linux_amd64.tar.gz \
+    && mv eksctl /usr/local/bin
+
+# helm
+RUN curl -LO https://get.helm.sh/helm-${HELM_VERSION}-linux-amd64.tar.gz \
+    && tar -zxvf  helm-${HELM_VERSION}-linux-amd64.tar.gz\
+    && mv linux-amd64/helm /usr/local/bin
+
+RUN apt clean && rm -rf /var/lib/apt/lists/* /tmp/downloads
 
 CMD ["/bin/bash"]
