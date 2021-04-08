@@ -74,7 +74,7 @@ RUN pip install pipenv wheel poetry
 
 # AWS API
 RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64-${AWS_CLI_VERSION}.zip" -o "awscliv2.zip" \
-    && unzip awscliv2.zip \
+    && unzip -q awscliv2.zip \
     && ./aws/install
 
 # JFrog CLI
@@ -133,12 +133,12 @@ RUN npm install -g yarn@${YARN_VERSION}
 
 # eksctl
 RUN curl -LO https://github.com/weaveworks/eksctl/releases/download/${EKSCTL_VERSION}/eksctl_Linux_amd64.tar.gz \
-    && tar -zxvf eksctl_Linux_amd64.tar.gz \
+    && tar -zxf eksctl_Linux_amd64.tar.gz \
     && mv eksctl /usr/local/bin
 
 # helm
 RUN curl -LO https://get.helm.sh/helm-${HELM_VERSION}-linux-amd64.tar.gz \
-    && tar -zxvf  helm-${HELM_VERSION}-linux-amd64.tar.gz\
+    && tar -zxf  helm-${HELM_VERSION}-linux-amd64.tar.gz\
     && mv linux-amd64/helm /usr/local/bin
 
 RUN apt clean && rm -rf /var/lib/apt/lists/* /tmp/downloads
