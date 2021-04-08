@@ -43,4 +43,4 @@ pipelines:
           onExecute:
             - cd ${res_gitJfrogPipelinesImage_resourcePath}
             - make image_build
-            - make image_push
+            - make ci_image_push
